@@ -95,3 +95,22 @@ CREATE TABLE silver.erp_px_cat_g1v2 (
     dwh_create_date DATETIME2 DEFAULT GETDATE()
 );
 GO
+IF OBJECT_ID('silver.dim_date', 'U') IS NOT NULL
+	DROP TABLBE silver.dim_date;
+GO
+
+CREATE TABLE silver.dim_date(
+	[Date] date NOT NULL,
+	[Year] AS (datepart(year,[Date])),
+	[Semester] AS (CONVERT([varchar](4),datepart(year,[Date]),(0))+case when datepart(month,[Date])>(6) then '2' else '1' end),
+	[Quarter] AS (CONVERT([varchar](4),datepart(year,[Date]),(0))+datename(quarter,[Date])),
+	[Month] AS (datepart(month,[Date])),
+	[Month_Name] AS (upper(substring(datename(month,[Date]),(1),(1)))+substring(datename(month,[Date]),(2),len(datename(month,[Date])))),
+	[Week] AS ((CONVERT([varchar](4),datepart(year,[Date]),(0))+replicate('0',(2)- len(datepart(week,[Date]))))+CONVERT([nvarchar](2),datepart(week,[Date]),(0))),
+	[Day] AS (datepart(day,[Date])),
+	[Day_of_Week] AS (datename(weekday,[Date])),
+	[Day_of_Year] AS (datename(dayofyear,[Date])),
+	[Jour_Ferie] [char](3) NULL,
+	[FiscalWeek] [int] NULL,
+	CONSTRAINT PK_dim_date PRIMARY KEY ([Date])
+)
