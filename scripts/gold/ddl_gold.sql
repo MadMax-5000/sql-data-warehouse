@@ -93,3 +93,20 @@ LEFT JOIN gold.dim_products pr
 LEFT JOIN gold.dim_customers cu
     ON sd.sls_cust_id = cu.customer_id;
 GO
+    
+CREATE VIEW gold.dim_date AS
+SELECT
+    [Date]           AS date_value,
+    [Year]           AS year,
+    [Semester]       AS semester,
+    [Quarter]        AS quarter,
+    [Month]          AS month_number,
+    [Month_Name]     AS month_name,
+    [Week]           AS week_number,
+    [Day]            AS day_number,
+    [Day_of_Week]    AS day_of_week,
+    [Day_of_Year]    AS day_of_year,
+    [Jour_Ferie]     AS holiday_flag,
+    [FiscalWeek]     AS fiscal_week
+FROM silver.dim_date;
+GO
